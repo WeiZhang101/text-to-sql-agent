@@ -1,10 +1,12 @@
 import streamlit as st
-from sql_db_agent import create_sql_db_agent, MSSQL_AGENT_PREFIX, MSSQL_AGENT_FORMAT_INSTRUCTIONS
+from sql_db_agent import SQLDBAgent
+from sql_agent.sql_agent_prompt import SQLAgentPrompt
 import traceback
 
 def initialize_agent():
     try:
-        return create_sql_db_agent()
+        agent = SQLDBAgent()
+        return agent.create_sql_db_agent()
     except Exception as e:
         st.error(f"初始化AI代理时出错: {str(e)}")
         st.code(traceback.format_exc())
@@ -51,10 +53,16 @@ def main():
             if question:
                 with st.spinner('AI正在处理您的问题...'):
                     try:
-                        # 调用SQL代理
-                        res = st.session_state.sql_agent.invoke(
-                            MSSQL_AGENT_PREFIX + question + MSSQL_AGENT_FORMAT_INSTRUCTIONS
+                        # 获取提示词
+                        prompt = SQLAgentPrompt()
+                        formatted_question = (
+                            prompt.get_agent_prefix() + 
+                            question + 
+                            prompt.get_format_instructions()
                         )
+                        
+                        # 调用SQL代理
+                        res = st.session_state.sql_agent.invoke(formatted_question)
                         
                         # 显示结果
                         st.success("查询完成！")
