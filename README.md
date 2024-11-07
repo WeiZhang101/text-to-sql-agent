@@ -14,13 +14,26 @@
 ## 快速开始
 
 ### 1. 环境准备
+
 ```bash
 # 克隆项目
 git clone https://github.com/yourusername/text-to-sql-agent.git
 cd text-to-sql-agent
 
+# 创建虚拟环境
+python3 -m venv venv
+
+# 激活虚拟环境
+## Windows
+venv\Scripts\activate
+## macOS/Linux
+source venv/bin/activate
+
 # 安装依赖
 pip3 install -r requirements.txt
+
+# 如果遇到依赖安装问题，可以尝试更新 pip
+pip3 install --upgrade pip
 ```
 
 ### 2. 配置环境变量
@@ -39,7 +52,7 @@ python3 src/db_init.py
 
 ### 4. 启动应用
 ```bash
-streamlit run src/sql_db_agent.py
+streamlit run src/frontend.py
 ```
 
 ### 5. 使用示例
@@ -47,7 +60,7 @@ streamlit run src/sql_db_agent.py
 2. 在输入框中输入自然语言查询，例如：
    - "查询所有员工的数量"
    - "显示部门分布情况"
-3. 点击 "Run Query" 按钮
+3. 点击 "开始查询" 按钮
 4. 系统会返回：
    - SQL 查询语句
    - 查询结果
@@ -58,10 +71,12 @@ streamlit run src/sql_db_agent.py
 ```
 text-to-sql-agent/
 ├── src/
-│   ├── sql_db_agent.py    # 主应用程序
+│   ├── frontend.py        # 前端界面
+│   ├── sql_db_agent.py    # 后端逻辑
 │   └── db_init.py         # 数据库初始化脚本
 ├── data/                  # 数据文件目录
 ├── db/                    # SQLite 数据库文件
+├── venv/                  # Python虚拟环境
 └── requirements.txt       # 项目依赖
 ```
 
@@ -74,6 +89,17 @@ text-to-sql-agent/
 - SQLite
 - Pandas
 - SQLAlchemy
+
+## 常见问题
+
+1. 虚拟环境相关
+   - 如果 `venv` 命令不可用，请先安装：`pip3 install virtualenv`
+   - 要退出虚拟环境，使用命令：`deactivate`
+   - 删除虚拟环境：删除 `venv` 目录即可
+
+2. 依赖安装问题
+   - 如果安装依赖时出错，可以尝试：`pip3 install -r requirements.txt --upgrade`
+   - 对于 M1/M2 Mac 用户，某些包可能需要特殊处理，请参考具体包的文档
 
 ## 许可证
 
