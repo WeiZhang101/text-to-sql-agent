@@ -1,0 +1,13 @@
+pyodbc==5.1.0
+tabulate
+openai
+langchain
+langchain-community
+langchain-core
+langchain-experimental
+langchain-openai==0.0.5
+pandas==2.2.2
+SQLAlchemy==2.0.30
+python-dotenv
+streamlit
+langchain_google_genai
