@@ -20,7 +20,7 @@ git clone https://github.com/yourusername/text-to-sql-agent.git
 cd text-to-sql-agent
 
 # 安装依赖
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ### 2. 配置环境变量
@@ -31,10 +31,10 @@ GOOGLE_API_KEY=your_google_api_key_here
 
 ### 3. 准备数据
 1. 将您的CSV数据文件放在 `./data` 目录下
-2. 默认支持的数据文件名为：`GITS_Delivery_Hub_resource_management-Resource_management.csv`
+2. 默认支持的数据文件名为：`xxx_xxx.csv`
 3. 运行数据库初始化脚本：
 ```bash
-python src/db_init.py
+python3 src/db_init.py
 ```
 
 ### 4. 启动应用
