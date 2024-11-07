@@ -1,13 +1,36 @@
+import os
+import nest_asyncio
+import asyncio
 from dotenv import load_dotenv
 from langchain_community.agent_toolkits import create_sql_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
+import google.generativeai as genai
+
+# 应用 nest_asyncio 来处理事件循环
+nest_asyncio.apply()
+
+# 确保有一个事件循环在运行
+try:
+    loop = asyncio.get_event_loop()
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
 # Load environment variables from .env file
 load_dotenv()
 
-llm_name = "gemini-1.5-pro-latest"
-model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest")
+# 确保设置了 GOOGLE_API_KEY
+if 'GOOGLE_API_KEY' not in os.environ:
+    raise ValueError("请确保设置了 GOOGLE_API_KEY 环境变量")
 
+genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
+
+def create_model():
+    return ChatGoogleGenerativeAI(
+        model="gemini-1.5-pro-latest",
+        convert_system_message_to_human=True,
+        temperature=0.3
+    )
 
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from langchain_community.utilities import SQLDatabase
@@ -92,33 +115,20 @@ SELECT [salary] FROM xyztable WHERE department = 'IGM' AND date LIKE '2020%'"
 
 """
 
-database_file_path = "./db/test_1.db"
-db = SQLDatabase.from_uri(f"sqlite:///{database_file_path}")
-toolkit = SQLDatabaseToolkit(db=db, llm=model)
+def create_sql_db_agent():
+    try:
+        # 与 db_init_.py中的数据库名称保持一致
+        database_file_path = "./db/test_1.db"
+        db = SQLDatabase.from_uri(f"sqlite:///{database_file_path}")
+        model = create_model()
+        toolkit = SQLDatabaseToolkit(db=db, llm=model)
 
-user_question = input("请输入您的问题：")
-
-sql_agent = create_sql_agent(
-    llm=model,
-    toolkit=toolkit,
-    top_k=30,
-    verbose=False,
-)
-
-res = sql_agent.invoke(MSSQL_AGENT_PREFIX + user_question + MSSQL_AGENT_FORMAT_INSTRUCTIONS)
-
-print(res['output'])
-
-# import streamlit as st
-#
-# st.title("SQL Query AI Agent")
-#
-# question = st.text_input("Enter your query:")
-#
-# if st.button("Run Query"):
-#     if question:
-#         res = sql_agent.invoke(MSSQL_AGENT_PREFIX + question + MSSQL_AGENT_FORMAT_INSTRUCTIONS)
-#
-#         st.markdown(res["output"])
-# else:
-#     st.error("Please enter a query.")
+        return create_sql_agent(
+            llm=model,
+            toolkit=toolkit,
+            top_k=30,
+            verbose=False,
+        )
+    except Exception as e:
+        print(f"创建SQL代理时出错: {str(e)}")
+        raise e

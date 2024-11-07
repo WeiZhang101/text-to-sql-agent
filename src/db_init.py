@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 
 def initialize_database(database_file_path):
     file_urls = [
-        "./data/GITS_Delivery_Hub_resource_management-Resource_management.csv",
+        "./data/xxxx.csv",
     ]
     # Create an engine to connect to the SQLite database
     engine = create_engine(f"sqlite:///{database_file_path}")
@@ -28,6 +28,6 @@ def initialize_database(database_file_path):
 
     print("Database initialized successfully!")
 
-
+# 指定数据库名称的地方
 database_file_path = "./db/test_1.db"
 initialize_database(database_file_path)
