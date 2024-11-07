@@ -25,12 +25,10 @@ if 'GOOGLE_API_KEY' not in os.environ:
 
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
+
 def create_model():
-    return ChatGoogleGenerativeAI(
-        model="gemini-1.5-pro-latest",
-        convert_system_message_to_human=True,
-        temperature=0.3
-    )
+    return ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest")
+
 
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from langchain_community.utilities import SQLDatabase
@@ -115,6 +113,7 @@ SELECT [salary] FROM xyztable WHERE department = 'IGM' AND date LIKE '2020%'"
 
 """
 
+
 def create_sql_db_agent():
     try:
         # 与 db_init_.py中的数据库名称保持一致
@@ -127,7 +126,7 @@ def create_sql_db_agent():
             llm=model,
             toolkit=toolkit,
             top_k=30,
-            verbose=False,
+            verbose=True,
         )
     except Exception as e:
         print(f"创建SQL代理时出错: {str(e)}")
